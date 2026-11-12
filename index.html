@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iroha</title>
+  <meta name="description" content="hi" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="card">
+    <div class="card__frame" aria-hidden="true"></div>
+
+    <header class="meta">
+      <span>~/iroha</span>
+    </header>
+
+    <section class="intro">
+      <h1 class="name">
+        <span class="prompt" aria-hidden="true">></span> hi im
+        <span class="visually-hidden">iroha</span><em class="type" aria-hidden="true"></em><span class="sp" aria-hidden="true"> </span><span class="caret" aria-hidden="true"></span>
+      </h1>
+
+      <p class="role">
+        <span class="role__line" aria-hidden="true"></span>
+        <span class="role__tag">cybersec</span>
+        <span class="role__line" aria-hidden="true"></span>
+      </p>
+    </section>
+
+    <nav class="links" aria-label="Links">
+      <a href="https://x.com/ehroha" class="link">twitter</a><span class="sep" aria-hidden="true">-</span>
+      <a href="https://github.com/iroha-sys" class="link">github</a><span class="sep" aria-hidden="true">-</span>
+      <a href="" class="link-off">soon</a>
+    </nav>
+
+    <figure class="banner">
+      <img src="babnner.png" width="1500" height="500" alt="banner">
+    </figure>
+
+    <section class="desc">
+      <p class="desc__label">// about</p>
+      <p class="desc__body">
+        blah blah blah girls kissing kissing blah blah blah girls kissing kissing blah blah blah girls kissing kissing blah blah blah girls kissing kissing blah blah blah girls kissing kissing
+      </p>
+    </section>
+
+    <section class="buttons">
+      <p class="buttons__label">// buttons</p>
+
+      <div class="buttons__list" aria-label="Buttons">
+        <!-- add buttons here ok -->
+
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var targey = document.querySelector(".type");
+      var spaceeee = document.querySelector(".sp");
+      var name = "iroha";
+
+      function fancydancymagictype() {
+        return 300 + (Math.random() * 2 - 1) * 100;
+      }
+
+      // reduced motion i think
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (!targey) return;
+
+      function showSpace() {
+        if (spaceeee) spaceeee.style.display = "";
+      }
+
+      if (reduce) {
+        targey.textContent = name;
+        showSpace();
+        return;
+      }
+
+      if (spaceeee) spaceeee.style.display = "none";
+
+      var i = 0;
+      (function type() {
+        if (i < name.length) {
+          i += 1;
+          targey.textContent = name.slice(0, i);
+          setTimeout(type, fancydancymagictype());
+        } else {
+          setTimeout(showSpace, fancydancymagictype());
+        }
+      })();
+    })();
+  </script>
+</body>
+</html>

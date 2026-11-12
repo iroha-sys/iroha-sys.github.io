@@ -1,0 +1,354 @@
+:root {
+  --lime: #b2f802;
+  --olive: #89966a;
+  --cream: #f8fbef;
+  --ink: #1a1d0e;
+
+  --bg: #0c0e06;
+  --panel: #15180c;
+  --line: rgba(248, 251, 239, 0.08);
+  --text: #e6ead8;
+  --muted: #8d937a;
+
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+  --serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+
+  /* scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--olive) var(--bg);
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(20px, 5vw, 64px);
+
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* card shit here */
+.card {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  /* 5 badges + gaps + side padding, but never wider than the screen */
+  max-width: calc(5 * 88px + 4 * 6px + 6px + 2 * clamp(18px, 4vw, 40px));
+  /* auto margins centre it vertically without clipping the top when the
+     card is taller than the screen (flex centring would cut it off) */
+  margin: auto 0;
+  padding: clamp(18px, 4vw, 40px);
+  text-align: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+.card__frame {
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--lime), var(--lime)) top left / 14px 1px no-repeat,
+    linear-gradient(var(--lime), var(--lime)) top left / 1px 14px no-repeat,
+    linear-gradient(var(--lime), var(--lime)) bottom right / 14px 1px no-repeat,
+    linear-gradient(var(--lime), var(--lime)) bottom right / 1px 14px no-repeat;
+}
+
+/* meta */
+.meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  padding-bottom: 18px;
+  border-bottom: 1px dashed var(--line);
+}
+
+/* introoo */
+.intro {
+  padding: 28px 0 22px;
+  text-align: center;
+}
+
+.name {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(30px, 8vw, 58px);
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+  color: var(--cream);
+  text-align: center;
+}
+
+.prompt {
+  font-family: var(--mono);
+  font-size: 0.42em;
+  color: var(--lime);
+  transform: translateY(-0.15em);
+}
+
+/* uhhhh */
+.name em {
+  font-style: italic;
+  color: var(--olive);
+  white-space: pre;
+}
+
+.caret {
+  display: inline-block;
+  width: 0.2em;
+  height: 0.62em;
+  /* thanks claude for helping me finetune these margins <3 */
+  margin-left: 0.06em;
+  margin-right: -0.51em; 
+  background: var(--lime);
+  transform: translateY(0.04em);
+  animation: blink 1.1s steps(1) infinite;
+}
+
+.sp {
+  white-space: pre;
+}
+
+/* yes */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* role lines */
+.role {
+  margin: 22px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 12.5px;
+}
+
+.role__tag {
+  display: inline-block;
+  padding: 3px 10px;
+  color: var(--ink);
+  background: var(--lime);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  font-size: 11px;
+}
+
+.role__line {
+  flex: 1;
+  min-width: 24px;
+  height: 1px;
+  background: var(--olive);
+}
+
+.role__sub {
+  color: var(--muted);
+  font-style: italic;
+  font-size: 12.5px;
+}
+
+/* links/navbar */
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 12px;
+  padding-bottom: 24px;
+  /* border-top: 1px dashed var(--line); */
+  border-bottom: 1px dashed var(--line);
+}
+
+.link {
+  position: relative;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 14px;
+  padding: 2px;
+  transition: color 0.18s ease;
+}
+
+.link::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  bottom: 0;
+  height: 1px;
+  width: 0;
+  background: var(--lime);
+  transition: width 0.25s ease;
+}
+
+.link:hover,
+.link:focus-visible {
+  color: var(--lime);
+  outline: none;
+}
+
+.link:hover::before,
+.link:focus-visible::before {
+  width: calc(100% - 4px);
+}
+
+.sep {
+  color: var(--olive);
+  user-select: none;
+}
+
+.link-off {
+  color: var(--muted);
+  opacity: 0.45;
+  text-decoration: none;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.link-off::before {
+  display: none;
+}
+
+.link-off:hover,
+.link-off:focus-visible {
+  color: var(--muted);
+  outline: none;
+}
+
+/* banner image */
+.banner {
+  margin: 24px 0 0;
+  border: 1px solid var(--line);
+  line-height: 0;
+}
+
+.banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 1;
+  object-fit: cover;
+}
+
+/* main shit */
+.desc {
+  padding-top: 26px;
+  text-align: center;
+}
+
+.desc__label {
+  margin: 0 0 10px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--olive);
+}
+
+.desc__body {
+  margin: 0 auto;
+  max-width: 46ch;
+  color: #c6cbb6;
+  font-size: 13.5px;
+  line-height: 1.75;
+}
+
+/* 88x31 thingies */
+.buttons {
+  padding-top: 26px;
+  text-align: center;
+}
+
+.buttons__label {
+  margin: 0 0 10px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--olive);
+}
+
+.buttons__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+
+.badge {
+  display: block;
+  flex: 0 0 auto;
+  width: 88px;
+  height: 31px;
+  line-height: 0;
+  text-decoration: none;
+}
+
+.badge svg,
+.badge img {
+  display: block;
+  width: 88px;
+  height: 31px;
+  image-rendering: pixelated;
+  border: 0;
+}
+
+.badge:hover,
+.badge:focus-visible {
+  outline: 1px solid var(--lime);
+  outline-offset: 1px;
+}
+
+/* blink blink */
+@keyframes blink {
+  0%, 55% {
+    opacity: 1;
+  }
+  56%, 100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret {
+    animation: none;
+  }
+  .link,
+  .link::before {
+    transition: none;
+  }
+}
+
+/* tiny devices */
+@media (max-width: 480px) {
+  .meta {
+    font-size: 10px;
+  }
+}
