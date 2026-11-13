@@ -62,7 +62,10 @@
         <div class="now__info">
           <a class="now__title" id="now-title" target="_blank" rel="noopener"></a>
           <span class="now__artist" id="now-artist"></span>
-          <span class="now__bar" aria-hidden="true"><span class="now__fill" id="now-fill"></span></span>
+          <div class="now__progress" id="now-progress">
+            <span class="now__bar" aria-hidden="true"><span class="now__fill" id="now-fill"></span></span>
+            <span class="now__time" id="now-time"></span>
+          </div>
         </div>
       </div>
 
@@ -145,6 +148,8 @@
       var title = document.getElementById("now-title");
       var artist = document.getElementById("now-artist");
       var fill = document.getElementById("now-fill");
+      var progress = document.getElementById("now-progress");
+      var timeEl = document.getElementById("now-time");
       var hist = document.getElementById("now-hist");
       var list = document.getElementById("now-list");
 
@@ -234,17 +239,32 @@
         );
       }
 
+      // 219 -> "3:39", 3725 -> "1:02:05"
+      function clock(seconds) {
+        var s = Math.max(0, Math.floor(seconds || 0));
+        var h = Math.floor(s / 3600);
+        var m = Math.floor((s % 3600) / 60);
+        var sec = s % 60;
+        var pad = function (n) {
+          return n < 10 ? "0" + n : "" + n;
+        };
+        return (h ? h + ":" + pad(m) : m) + ":" + pad(sec);
+      }
+
       // progress is a snapshot, so tick it locally from startedAt
       function tick() {
         var main = current();
         var t = main && !main.idle ? main.track : null;
         if (!t || !t.startedAt || !t.duration) {
           fill.style.width = "0%";
+          progress.hidden = true;
           return;
         }
         var elapsed = (Date.now() - Date.parse(t.startedAt)) / 1000;
         var pct = Math.min(100, Math.max(0, (elapsed / t.duration) * 100));
         fill.style.width = pct + "%";
+        timeEl.textContent = clock(Math.min(elapsed, t.duration)) + " / " + clock(t.duration);
+        progress.hidden = false;
       }
 
       async function poll() {
