@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>bad apple 88x31</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #000;
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      font-family: monospace;
+      text-align: center;
+      padding: 16px;
+    }
+
+    h1 {
+      font-size: 18px;
+      font-weight: normal;
+    }
+
+    /* Keeps layout height steady when swapping between button and GIF */
+    #stage {
+      height: 62px; /* Matches --scale: 2 height (31px * 2) */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #play-btn {
+      background: #000;
+      color: #fff;
+      border: 1px solid #fff;
+      padding: 10px 20px;
+      font-family: inherit;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #play-btn:hover {
+      background: #fff;
+      color: #000;
+    }
+
+    #button-wrapper {
+      display: none;
+      position: relative;
+      cursor: pointer;
+      /* Integer scaling keeps pixels razor-sharp (change --scale to 1, 2, 3, etc.) */
+      --scale: 2;
+      width: calc(88px * var(--scale));
+      height: calc(31px * var(--scale));
+    }
+
+    #gif-display {
+      width: 100%;
+      height: 100%;
+      display: block;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: -webkit-crisp-edges;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+
+    p {
+      font-size: 13px;
+      color: #888;
+    }
+
+    #copy-text {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    #copy-text:hover {
+      color: #fff;
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      background: #fff;
+      color: #000;
+      padding: 6px 12px;
+      font-size: 14px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+    }
+
+    #toast.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>bad apple as a 88x31 button</h1>
+
+  <div id="stage">
+    <button id="play-btn">play</button>
+
+    <div id="button-wrapper" title="Click to copy button HTML">
+      <img id="gif-display" alt="bad apple 88x31">
+    </div>
+  </div>
+
+  <p>encoded by iroha<br>pls hotlink it (<span id="copy-text" title="Click to copy button HTML">click 2 copy</span>) :3</p>
+
+  <div id="toast">Copied HTML to clipboard!</div>
+  <audio id="audio" src="/assets/badapple.mp3"></audio>
+
+  <script>
+    const btn = document.getElementById('play-btn');
+    const wrapper = document.getElementById('button-wrapper');
+    const copyText = document.getElementById('copy-text');
+    const gif = document.getElementById('gif-display');
+    const audio = document.getElementById('audio');
+    const toast = document.getElementById('toast');
+
+    const gifFile = '/buttons/iroha_bad_apple.gif';
+
+    async function copyEmbedCode() {
+      const embedCode = `<a href="https://yuri.green/badapple"><img src="https://yuri.green/buttons/iroha_bad_apple.gif" width="88" height="31" style="image-rendering: pixelated;" alt="Bad Apple"></a>`;
+      
+      await navigator.clipboard.writeText(embedCode);
+      
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1800);
+    }
+
+    btn.addEventListener('click', () => {
+      btn.style.display = 'none';
+      gif.src = gifFile + '?' + new Date().getTime();
+      wrapper.style.display = 'block';
+      audio.play();
+    });
+
+    wrapper.addEventListener('click', copyEmbedCode);
+    copyText.addEventListener('click', copyEmbedCode);
+
+    audio.addEventListener('ended', () => {
+      wrapper.style.display = 'none';
+      gif.src = '';
+      btn.style.display = 'block';
+    });
+  </script>
+
+</body>
+</html>
