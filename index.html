@@ -47,8 +47,29 @@
     <section class="desc">
       <p class="desc__label">// about</p>
       <p class="desc__body">
-        blah blah blah girls kissing kissing blah blah blah girls kissing kissing blah blah blah girls kissing kissing blah blah blah girls kissing kissing blah blah blah girls kissing kissing
+        <b class="flags">she/her / <span class="w--trans"><span>t</span><span>r</span><span>a</span><span>n</span><span>s</span></span> / <span class="w--bi"><span>bis</span><span>ex</span><span>ual</span></span></b><br>
+        hi! im a <b>whitehat/cybersec researcher</b> who loves breaking things >:3<br>
+        i love <b>reading manga and playing rhythm games!</b><br>come talk to me on <a href="https://x.com/ehroha" class="link">twitter</a>!<br>
+        <i>(im always lonely)</i>
       </p>
+    </section>
+
+    <section class="now" id="now" aria-label="Now playing" hidden>
+      <p class="now__label" id="now-label">// now playing</p>
+
+      <div class="now__player" id="now-player">
+        <img class="now__art" id="now-art" alt="" width="44" height="44" loading="lazy" />
+        <div class="now__info">
+          <a class="now__title" id="now-title" target="_blank" rel="noopener"></a>
+          <span class="now__artist" id="now-artist"></span>
+          <span class="now__bar" aria-hidden="true"><span class="now__fill" id="now-fill"></span></span>
+        </div>
+      </div>
+
+      <details class="now__hist" id="now-hist" hidden>
+        <summary>history</summary>
+        <ol class="now__list" id="now-list"></ol>
+      </details>
     </section>
 
     <section class="buttons">
@@ -61,6 +82,9 @@
         <a class="badge" href="https://iris.gay/"><img src="https://iris.gay/images/88x31/eye.png" width="88" height="31" style="image-rendering: pixelated;" alt="Iris.gay"></a>
         <a class="badge" href="https://circulars.dev"><img src="https://circulars.dev/circular-88x31.gif" alt="circulars.dev" style="image-rendering: pixelated;" width="88" height="31"></a>
         <a class="badge" href="https://eightyeightthirty.one/"><img src="https://eightyeightthirty.one/88x31.png" width="88" height="31" style="image-rendering: pixelated;" alt="eightyeightthirty.one"></a>
+        <a class="badge" href="https://qwq.sh"><img src="https://qwq.sh/88x31/hazelcaffe.png" style="image-rendering: pixelated;" width="88" height="31" alt="Hazel's website"></a>
+        <a class="badge" href="https://en.wikipedia.org/wiki/Hatsune_Miku"><img src="https://yuri.green/buttons/miku.gif" width="88" height="31" style="image-rendering: pixelated;" alt="miku approved"></a>
+        
       </div>
     </section>
   </main>
@@ -102,6 +126,147 @@
           setTimeout(showSpace, fancydancymagictype());
         }
       })();
+    })();
+  </script>
+
+  <script>
+    // now playing — polls naviapi every 15s, shows the last played track
+    // when nothing is playing, and puts the earlier tracks in a dropdown.
+    (function () {
+      var API = "https://stats.yuri.green/v1/now-playing";
+      var POLL_MS = 15000;
+
+      var root = document.getElementById("now");
+      if (!root) return;
+
+      var label = document.getElementById("now-label");
+      var player = document.getElementById("now-player");
+      var art = document.getElementById("now-art");
+      var title = document.getElementById("now-title");
+      var artist = document.getElementById("now-artist");
+      var fill = document.getElementById("now-fill");
+      var hist = document.getElementById("now-hist");
+      var list = document.getElementById("now-list");
+
+      var etag = null;
+      var state = null;
+
+      // the track shown in the player: the current one, or the newest scrobble
+      function current() {
+        if (!state) return null;
+        if (state.playing && state.track) return { track: state.track, idle: false };
+        if (state.recent && state.recent.length) return { track: state.recent[0], idle: true };
+        return null;
+      }
+
+      function render() {
+        var main = current();
+        if (!main) {
+          root.hidden = true;
+          return;
+        }
+        root.hidden = false;
+
+        var t = main.track;
+        player.classList.toggle("now__player--idle", main.idle);
+        label.textContent = main.idle ? "// last played" : "// now playing";
+
+        if (art.getAttribute("src") !== t.artwork) art.src = t.artwork;
+        art.alt = t.album ? t.album + " cover" : "";
+
+        title.textContent = t.title;
+        if (t.url) {
+          title.href = t.url;
+          title.target = "_blank";
+          title.rel = "noopener";
+        } else {
+          title.removeAttribute("href");
+        }
+        artist.textContent = t.artist;
+
+        renderHistory(main);
+        tick();
+      }
+
+      function renderHistory(main) {
+        var items = state.recent ? state.recent.slice() : [];
+
+        // the entry already shown in the player doesn't belong in the list
+        var skip = main.track;
+        items = items.filter(function (item) {
+          return !(item.title === skip.title && item.artist === skip.artist);
+        });
+
+        hist.hidden = items.length === 0;
+
+        list.replaceChildren.apply(
+          list,
+          items.map(function (item) {
+            var li = document.createElement("li");
+
+            var img = document.createElement("img");
+            img.src = item.artwork;
+            img.alt = "";
+            img.width = 28;
+            img.height = 28;
+            img.loading = "lazy";
+
+            var box = document.createElement("div");
+            box.className = "now__li";
+
+            var a = document.createElement("a");
+            a.className = "now__li-title";
+            a.textContent = item.title;
+            if (item.url) {
+              a.href = item.url;
+              a.target = "_blank";
+              a.rel = "noopener";
+            }
+
+            var s = document.createElement("span");
+            s.className = "now__li-artist";
+            s.textContent = item.artist;
+
+            box.append(a, s);
+            li.append(img, box);
+            return li;
+          })
+        );
+      }
+
+      // progress is a snapshot, so tick it locally from startedAt
+      function tick() {
+        var main = current();
+        var t = main && !main.idle ? main.track : null;
+        if (!t || !t.startedAt || !t.duration) {
+          fill.style.width = "0%";
+          return;
+        }
+        var elapsed = (Date.now() - Date.parse(t.startedAt)) / 1000;
+        var pct = Math.min(100, Math.max(0, (elapsed / t.duration) * 100));
+        fill.style.width = pct + "%";
+      }
+
+      async function poll() {
+        if (document.hidden) return;
+        try {
+          var res = await fetch(API, {
+            headers: etag ? { "If-None-Match": etag } : {},
+          });
+          if (res.status === 304) return;
+          if (!res.ok) return;
+          etag = res.headers.get("ETag");
+          state = await res.json();
+          render();
+        } catch (e) {
+          // keep whatever is on screen; the next poll will try again
+        }
+      }
+
+      setInterval(tick, 1000);
+      setInterval(poll, POLL_MS);
+      document.addEventListener("visibilitychange", poll);
+      poll();
     })();
   </script>
 </body>

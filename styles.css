@@ -276,10 +276,237 @@ body {
 
 .desc__body {
   margin: 0 auto;
-  max-width: 46ch;
+  max-width: 50ch;
   color: #c6cbb6;
   font-size: 13.5px;
   line-height: 1.75;
+}
+
+/* pride flags, one solid colour per character (or per group) instead of a
+   gradient — wrap the word and colour the children by position.
+   trans: t / r / a / n / s   ·   bi: bis / ex / ual */
+.w--trans > span:nth-child(1) { color: #5bcefa; }
+.w--trans > span:nth-child(2) { color: #f5a9b8; }
+.w--trans > span:nth-child(3) { color: #ffffff; }
+.w--trans > span:nth-child(4) { color: #f5a9b8; }
+.w--trans > span:nth-child(5) { color: #5bcefa; }
+
+.w--bi > span:nth-child(1) { color: #d60270; }
+.w--bi > span:nth-child(2) { color: #9b4f96; }
+.w--bi > span:nth-child(3) { color: #0038a8; }
+
+/* glow so the flag colours stay readable on the dark card.
+   each character glows in its own colour, with a faint cream halo behind */
+.flags {
+  text-shadow: 0 0 12px rgba(248, 251, 239, 0.25);
+}
+
+.w--trans > span,
+.w--bi > span {
+  text-shadow:
+    0 0 10px currentColor,
+    0 0 12px rgba(248, 251, 239, 0.22);
+}
+
+/* the bi blue is the darkest of the lot, so it needs a brighter halo than
+   its own fill (and a lifted fill) to stay legible */
+.w--bi > span:nth-child(3) {
+  color: #2f6bff;
+  text-shadow:
+    0 0 10px rgba(47, 107, 255, 0.85),
+    0 0 14px rgba(120, 160, 255, 0.45);
+}
+
+/* now playing widget */
+.now {
+  padding-top: 26px;
+  text-align: center;
+}
+
+.now[hidden] {
+  display: none;
+}
+
+.now__label {
+  margin: 0 0 10px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--olive);
+}
+
+.now__player {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  text-align: left;
+  border: 1px solid var(--line);
+  background: rgba(248, 251, 239, 0.03);
+}
+
+.now__art {
+  flex: 0 0 auto;
+  display: block;
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  background: rgba(248, 251, 239, 0.06);
+}
+
+.now__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.now__title,
+.now__artist {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.now__title {
+  font-size: 12.5px;
+  color: var(--cream);
+  text-decoration: none;
+}
+
+.now__title:hover,
+.now__title:focus-visible {
+  color: var(--lime);
+  outline: none;
+}
+
+.now__artist {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.now__bar {
+  display: block;
+  margin-top: 7px;
+  height: 2px;
+  background: rgba(248, 251, 239, 0.12);
+}
+
+.now__fill {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--lime);
+}
+
+/* nothing playing: the newest scrobble, dimmed */
+.now__player--idle .now__art {
+  opacity: 0.55;
+}
+
+.now__player--idle .now__title {
+  color: var(--muted);
+}
+
+.now__player--idle .now__bar {
+  display: none;
+}
+
+/* history dropdown */
+.now__hist {
+  margin-top: 8px;
+  text-align: left;
+}
+
+.now__hist[hidden] {
+  display: none;
+}
+
+.now__hist > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+  list-style: none;
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--olive);
+}
+
+.now__hist > summary::-webkit-details-marker {
+  display: none;
+}
+
+.now__hist > summary::before {
+  content: "▸";
+  color: var(--lime);
+  font-size: 10px;
+}
+
+.now__hist[open] > summary::before {
+  content: "▾";
+}
+
+.now__hist > summary:hover,
+.now__hist > summary:focus-visible {
+  color: var(--text);
+  outline: none;
+}
+
+.now__list {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--line);
+  background: rgba(248, 251, 239, 0.02);
+}
+
+.now__list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+}
+
+.now__list li + li {
+  border-top: 1px dashed var(--line);
+}
+
+.now__list img {
+  flex: 0 0 auto;
+  display: block;
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  background: rgba(248, 251, 239, 0.06);
+}
+
+.now__li {
+  min-width: 0;
+}
+
+.now__li-title,
+.now__li-artist {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.now__li-title {
+  font-size: 11.5px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.now__li-title:hover {
+  color: var(--lime);
+}
+
+.now__li-artist {
+  font-size: 11px;
+  color: var(--muted);
 }
 
 /* 88x31 thingies */
